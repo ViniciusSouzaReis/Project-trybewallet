@@ -3,6 +3,7 @@ const INITIAL_STATE = {
   expenses: [],
   editor: false,
   idToEdit: 0,
+  totalExpenses: 0,
 };
 
 function wallet(state = INITIAL_STATE, action) {

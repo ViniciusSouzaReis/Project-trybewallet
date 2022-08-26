@@ -36,6 +36,7 @@ class Login extends React.Component {
     const checkDisable = !validationEmail || password.length < checkPasswordLength;
     return (
       <div>
+        <div>Hello, TrybeWallet!</div>
         <div>Login</div>
         <input
           type="email"

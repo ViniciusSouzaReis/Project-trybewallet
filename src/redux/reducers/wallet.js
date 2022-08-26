@@ -1,3 +1,5 @@
+import { API_REQUEST } from '../actions/index';
+
 const INITIAL_STATE = {
   currencies: [],
   expenses: [],
@@ -8,9 +10,13 @@ const INITIAL_STATE = {
 
 function wallet(state = INITIAL_STATE, action) {
   switch (action.type) {
-  default: {
+  case API_REQUEST:
+    return {
+      ...state,
+      currencies: action.payload,
+    };
+  default:
     return state;
-  }
   }
 }
 

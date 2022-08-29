@@ -49,6 +49,13 @@ class Table extends Component {
                 <td>
                   <button
                     type="button"
+                    data-testid="edit-btn"
+                    // onClick={}
+                  >
+                    Editar despesa
+                  </button>
+                  <button
+                    type="button"
                     data-testid="delete-btn"
                     onClick={ () => deleteInfo(e.id) }
                   >
@@ -74,7 +81,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 Table.propTypes = {
-  expenses: PropTypes.string.isRequired,
+  expenses: PropTypes.arrayOf(Object).isRequired,
   deleteInfo: PropTypes.func.isRequired,
 };
 

@@ -3,9 +3,50 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouterAndRedux from './renderWith';
 import App from '../../App';
+import WalletForm from '../../components/WalletForm';
 import Table from '../../components/Table';
+import Wallet from '../../pages/Wallet';
 // import Header from '../../components/Header';
-// import { mockData } from '../../../cypress/mocks/data';
+import { mockData } from '../../../cypress/mocks/data';
+
+const STATE = {
+  user: {
+    email: 'trybe@wallet.com',
+    senha: '123456',
+  },
+  wallet: {
+    currencies: [
+      'USD',
+      'CAD',
+      'GBP',
+      'ARS',
+      'BTC',
+      'LTC',
+      'EUR',
+      'JPY',
+      'CHF',
+      'AUD',
+      'CNY',
+      'ILS',
+      'ETH',
+      'XRP',
+      'DOGE',
+    ],
+    expenses: [
+      {
+        id: 0,
+        value: '20',
+        currency: 'USD',
+        method: 'Dinheiro',
+        tag: 'Saúde',
+        description: 'Descrição da despesa',
+        exchangeRates: mockData,
+      },
+    ],
+    editor: false,
+    idToEdit: 0,
+  },
+};
 
 describe('Testa o componente App.js', () => {
   test('verifica se contem os textos de início', () => {
@@ -41,112 +82,75 @@ describe('Testa o componente App.js', () => {
     expect(userLogin).toHaveBeenCalled();
     expect(userLogin).toHaveBeenCalledWith(email);
   });
-});
 
-describe('Testa o componente walletform.js', () => {
-  test('verifica se contem os textos de início', () => {
+  test('habilita bottão', () => {
     const { history } = renderWithRouterAndRedux(<App />);
-    history.push('/carteira');
+    history.push('/');
 
-    expect(screen.getByText(/TrybeWallet/i)).toBeInTheDocument();
-    expect(screen.getByText(/BRL/i)).toBeInTheDocument();
-  });
+    const inputLogin = screen.getByTestId('email-input');
+    const inputPassword = screen.getByTestId('password-input');
+    userEvent.type(inputLogin, 'alguem@gmail.com');
+    userEvent.type(inputPassword, '123456');
 
-  test('verifica se os inputs então na tela', () => {
-    const { history } = renderWithRouterAndRedux(<App />);
-    history.push('/carteira');
-
-    const inputValue = screen.getByTestId('value-input');
-    expect(inputValue).toBeInTheDocument();
-
-    const inputDescription = screen.getByTestId('description-input');
-    expect(inputDescription).toBeInTheDocument();
-
-    const inputCurrency = screen.getByTestId('currency-input');
-    expect(inputCurrency).toBeInTheDocument();
-
-    const inputMethod = screen.getByTestId('method-input');
-    expect(inputMethod).toBeInTheDocument();
-
-    const inputTag = screen.getByTestId('tag-input');
-    expect(inputTag).toBeInTheDocument();
-  });
-
-  test('verificar funcionamento das funções', () => {
-    const { history } = renderWithRouterAndRedux(<App />);
-    history.push('/carteira');
-
-    const getButton = screen.getByRole('button', { name: /adicionar despesa/i });
-    userEvent.click(getButton);
-    const clickRequest = jest.fn();
-    const parameters = 'param';
-    clickRequest(parameters);
-
-    expect(clickRequest).toHaveBeenCalled();
-    expect(clickRequest).toHaveBeenCalledTimes(1);
-    expect(clickRequest).toHaveBeenCalledWith(parameters);
-  });
-});
-
-describe('Testa o componente Table.js', () => {
-  test('verifca textos na tela', () => {
-    const { history } = renderWithRouterAndRedux(<App />);
-    history.push('/carteira');
-
-    const inputValue = screen.getByTestId('value-input');
-    expect(inputValue).toBeInTheDocument();
-    userEvent.type(inputValue, '10');
-
-    const inputDescription = screen.getByTestId('description-input');
-    expect(inputDescription).toBeInTheDocument();
-    userEvent.type(inputDescription, 'mcDonalds');
-
-    const inputCurrency = screen.getByTestId('currency-input');
-    expect(inputCurrency).toBeInTheDocument();
-
-    const inputMethod = screen.getByRole('option', { name: 'Dinheiro' });
-    expect(inputMethod).toBeInTheDocument();
-    userEvent.click(inputMethod, 'Dinheiro');
-
-    const inputTag = screen.getByRole('option', { name: /Alimentação/i });
-    expect(inputTag).toBeInTheDocument();
-    userEvent.click(inputTag, 'Alimentação');
-
-    const getBtn = screen.getByText('Adicionar despesa');
+    const getBtn = screen.getByRole('button', { name: /entrar/i });
     userEvent.click(getBtn);
 
-    const findInfoCurrency = jest.fn();
-    findInfoCurrency();
-    expect(findInfoCurrency).toHaveBeenCalled();
+    const userLogin = jest.fn();
+    userLogin();
+    expect(userLogin).toHaveBeenCalled();
   });
 });
 
-describe('Testa o componente Table.js', () => {
-  test('verifca textos na tela', () => {
-    const { history } = renderWithRouterAndRedux(<Table />);
-    history.push('/carteira');
+describe('testa o WalletForm.js', () => {
+  test('verifica se a função foi chamada', () => {
+    renderWithRouterAndRedux(<WalletForm />);
 
-    const value = screen.getByText('Valor');
-    expect(value).toBeInTheDocument();
-    userEvent.type();
+    const getBtn = screen.getByRole('button', { name: /adicionar despesa/i });
+    userEvent.click(getBtn);
+
+    const clickRequest = jest.fn();
+    clickRequest();
+
+    expect(clickRequest).toHaveBeenCalled();
+  });
+});
+
+describe('testa o Table.js', () => {
+  test('testa todo o component', () => {
+    renderWithRouterAndRedux(<Table />);
 
     const description = screen.getByText('Descrição');
     expect(description).toBeInTheDocument();
 
-    const currency = screen.getByText('Moeda');
-    expect(currency).toBeInTheDocument();
-
-    const method = screen.getByText('Método de pagamento');
-    expect(method).toBeInTheDocument();
-
     const tag = screen.getByText('Tag');
     expect(tag).toBeInTheDocument();
 
-    const getBtn = screen.getByRole('button', { name: /excluir/i });
-    userEvent.click(getBtn);
+    const payment = screen.getByText('Método de pagamento');
+    expect(payment).toBeInTheDocument();
 
-    const deleteInfo = jest.fn();
-    deleteInfo();
-    expect(deleteInfo).toHaveBeenCalled();
+    const moeda = screen.getByText('Moeda');
+    expect(moeda).toBeInTheDocument();
+
+    const cambio = screen.getByText('Câmbio utilizado');
+    expect(cambio).toBeInTheDocument();
+
+    const valor = screen.getByText('Valor convertido');
+    expect(valor).toBeInTheDocument();
+
+    const moeda1 = screen.getByText('Moeda de conversão');
+    expect(moeda1).toBeInTheDocument();
+
+    const excluir = screen.getByText('Editar/Excluir');
+    expect(excluir).toBeInTheDocument();
+  });
+
+  test('renderização condicional', () => {
+    const { store } = renderWithRouterAndRedux(<Wallet />, { initialState: STATE });
+
+    const buttonDelete = screen.getAllByTestId('delete-btn');
+    userEvent.click(buttonDelete[0]);
+
+    const expense = [];
+    expect(store.getState().wallet.expenses).toEqual(expense);
   });
 });

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { deleteInfoAction } from '../redux/actions/index';
 
 class Table extends Component {
-  findInfoCurrency = (param, param2) => {
+  findInfoCurrency = (param, paramtwo) => {
     const newArray = param.map((element) => Object.values(element.exchangeRates));
     if (newArray.length >= 1) {
-      const findName = newArray[0].find((element) => element.code === param2);
+      const findName = newArray[0].find((element) => element.code === paramtwo);
       return ({
         cursiveName: findName.name,
         ask: findName.ask,
@@ -15,7 +16,7 @@ class Table extends Component {
   };
 
   render() {
-    const { expenses } = this.props;
+    const { expenses, deleteInfo } = this.props;
     const result = expenses.map((element) => this
       .findInfoCurrency(expenses, element.currency));
     return (
@@ -36,7 +37,7 @@ class Table extends Component {
           </thead>
           <tbody>
             { expenses.map((e, index) => (
-              <tr key={ index }>
+              <tr key={ e.id }>
                 <td>{e.description}</td>
                 <td>{e.tag}</td>
                 <td>{e.method}</td>
@@ -45,6 +46,15 @@ class Table extends Component {
                 <td>{Number(result[index].ask).toFixed(2)}</td>
                 <td>{(e.value * result[index].ask).toFixed(2)}</td>
                 <td>Real</td>
+                <td>
+                  <button
+                    type="button"
+                    data-testid="delete-btn"
+                    onClick={ () => deleteInfo(e.id) }
+                  >
+                    Excluir
+                  </button>
+                </td>
               </tr>
             ))}
 
@@ -59,8 +69,13 @@ const mapStateToProps = (state) => ({
   expenses: state.wallet.expenses,
 });
 
+const mapDispatchToProps = (dispatch) => ({
+  deleteInfo: (id) => dispatch(deleteInfoAction(id)),
+});
+
 Table.propTypes = {
   expenses: PropTypes.string.isRequired,
+  deleteInfo: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, null)(Table);
+export default connect(mapStateToProps, mapDispatchToProps)(Table);

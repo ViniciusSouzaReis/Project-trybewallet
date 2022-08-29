@@ -2,16 +2,16 @@
 export const USER_LOGIN = 'USER_LOGIN';
 export const API_REQUEST = 'API_REQUEST';
 export const SAVE_CONTENT = 'SAVE_CONTENT';
-export const API_INFO = 'API_INFO';
+export const DELETE_INFO = 'DELETE_INFO';
 
 export const userLoginAction = (email) => ({
   type: USER_LOGIN,
   email,
 });
 
-export const saveApiInfo = (payload) => ({
-  type: API_INFO,
-  exchangeRates: payload,
+export const deleteInfoAction = (payload) => ({
+  type: DELETE_INFO,
+  payload,
 });
 
 export const requestCurrenciesAction = (payload) => ({

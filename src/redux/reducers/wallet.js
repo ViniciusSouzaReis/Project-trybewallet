@@ -1,4 +1,4 @@
-import { API_REQUEST, SAVE_CONTENT } from '../actions/index';
+import { API_REQUEST, SAVE_CONTENT, DELETE_INFO } from '../actions/index';
 
 const INITIAL_STATE = {
   currencies: [],
@@ -18,6 +18,11 @@ function wallet(state = INITIAL_STATE, action) {
     return {
       ...state,
       expenses: [...state.expenses, action.expenses],
+    };
+  case DELETE_INFO:
+    return {
+      ...state,
+      expenses: state.expenses.filter((e) => e.id !== action.payload),
     };
   default:
     return state;

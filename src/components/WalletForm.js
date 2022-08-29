@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getCurrencies,
-  saveExpentContent } from '../redux/actions/index';
+  clickRequest } from '../redux/actions/index';
 
 class WalletForm extends Component {
   constructor() {
@@ -10,11 +10,11 @@ class WalletForm extends Component {
 
     this.state = {
       id: 0,
-      value: 0,
+      value: '',
       description: '',
-      currency: '',
+      currency: 'USD',
       method: '',
-      tag: '',
+      tag: 'Alimentação',
     };
   }
 
@@ -33,7 +33,7 @@ class WalletForm extends Component {
       method,
       tag,
     } = this.state;
-    dispatch(saveExpentContent(
+    dispatch(clickRequest(
       id,
       value,
       description,
@@ -43,10 +43,10 @@ class WalletForm extends Component {
     ));
     this.setState((prevState) => ({
       id: prevState.id + 1,
-      value: 0,
+      value: '',
       description: '',
-      currency: '',
-      method: '',
+      currency: 'USD',
+      method: 'Alimentação',
       tag: '',
     }));
   };
@@ -114,9 +114,9 @@ class WalletForm extends Component {
             value={ method }
             onChange={ this.handleChange }
           >
-            <option value="money">Dinheiro</option>
-            <option value="debit-card">Cartão de crédito</option>
-            <option value="credit-card">Cartão de débito</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Cartão de crédito">Cartão de crédito</option>
+            <option value="Cartão de débito">Cartão de débito</option>
           </select>
         </label>
         <label htmlFor="category-select">
@@ -128,11 +128,11 @@ class WalletForm extends Component {
             value={ tag }
             onChange={ this.handleChange }
           >
-            <option value="food">Alimentação</option>
-            <option value="leisure">Lazer</option>
-            <option value="work">Trabalho</option>
-            <option value="transport">Transporte</option>
-            <option value="health">Saúde</option>
+            <option value="Alimentação">Alimentação</option>
+            <option value="Lazer">Lazer</option>
+            <option value="Trabalho">Trabalho</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Saúde">Saúde</option>
           </select>
         </label>
         <button

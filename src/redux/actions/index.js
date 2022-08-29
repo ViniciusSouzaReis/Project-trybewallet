@@ -2,10 +2,16 @@
 export const USER_LOGIN = 'USER_LOGIN';
 export const API_REQUEST = 'API_REQUEST';
 export const SAVE_CONTENT = 'SAVE_CONTENT';
+export const API_INFO = 'API_INFO';
 
 export const userLoginAction = (email) => ({
   type: USER_LOGIN,
   email,
+});
+
+export const saveApiInfo = (payload) => ({
+  type: API_INFO,
+  exchangeRates: payload,
 });
 
 export const requestCurrenciesAction = (payload) => ({
@@ -13,15 +19,16 @@ export const requestCurrenciesAction = (payload) => ({
   payload,
 });
 
-export const saveExpentContent = (...info) => ({
+export const saveExpentContent = (array, info) => ({
   type: SAVE_CONTENT,
   expenses: {
-    id: info[0],
-    value: info[1],
-    description: info[2],
-    currency: info[3],
-    method: info[4],
-    tag: info[5],
+    id: array[0],
+    value: array[1],
+    currency: array[3],
+    method: array[4],
+    tag: array[5],
+    description: array[2],
+    exchangeRates: info,
   },
 });
 
@@ -32,8 +39,7 @@ export function getCurrencies() {
 
       const request = await fetch(CURRENCIES_API);
       const response = await request.json();
-      const initials = Object.values(response).map((coin) => coin.code);
-      const filtered = initials.filter((cn, index) => cn.code !== 'USDT' && index !== 0);
+      const filtered = Object.keys(response).filter((e) => e !== 'USDT');
       dispatch(requestCurrenciesAction(filtered));
     } catch (error) {
       console.log(error);
@@ -48,9 +54,8 @@ export function clickRequest(...infos) {
 
       const request = await fetch(CURRENCIES_API);
       const response = await request.json();
-      const initials = Object.values(response).map((coin) => coin.code);
-      const filtered = initials.filter((cn, index) => cn.code !== 'USDT' && index !== 0);
-      dispatch(saveExpentContent(...infos));
+      const getInfo = [...infos];
+      dispatch(saveExpentContent(getInfo, response));
     } catch (error) {
       console.log(error);
     }

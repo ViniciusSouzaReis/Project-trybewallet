@@ -5,7 +5,6 @@ const INITIAL_STATE = {
   expenses: [],
   editor: false,
   idToEdit: 0,
-  totalExpenses: 0,
 };
 
 function wallet(state = INITIAL_STATE, action) {
@@ -18,7 +17,7 @@ function wallet(state = INITIAL_STATE, action) {
   case SAVE_CONTENT:
     return {
       ...state,
-      expenses: [action.expenses],
+      expenses: [...state.expenses, action.expenses],
     };
   default:
     return state;

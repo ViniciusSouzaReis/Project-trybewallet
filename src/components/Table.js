@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 class Table extends Component {
-  findInfoCurrency = (param, paramtwo) => {
+  findInfoCurrency = (param, param2) => {
     const newArray = param.map((element) => Object.values(element.exchangeRates));
     if (newArray.length >= 1) {
-      const findName = newArray[0].find((element) => element.code === paramtwo);
+      const findName = newArray[0].find((element) => element.code === param2);
       return ({
         cursiveName: findName.name,
         ask: findName.ask,
